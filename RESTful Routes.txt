@@ -1,0 +1,21 @@
+============Campground Routes ==============
+============================================
+NAME            PATH               HTTP VERB
+============================================   
+Index       /campgrounds             GET    
+New         /Campgrounds/new         GET    
+Create      /Campgrounds             POST    
+Show        /Campgrounds/:id         GET
+Edit        /Campgrounds/:id/edit    GET
+Update      /Campgrounds/:id         PUT
+Destroy     /Campgrounds/:id         DELETE
+
+
+==============Comment Routes===========================
+=======================================================
+NAME                PATH                      HTTP VERB
+=======================================================
+New         /Campgrounds/:id/comment/new         GET    
+Create      /Campgrounds/:id/comment             POST    
+Show        /Campgrounds/:id                     GET
+

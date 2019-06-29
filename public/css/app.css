@@ -1,0 +1,35 @@
+.addHeader{
+    text-align: center;
+}
+
+.formSpecs{
+    width: 30%;
+    margin:0 auto;
+}
+
+#newCampForm{
+    width: 60%;
+    margin: 0 auto;
+}
+
+.thumbnail{
+    padding: 0;
+}
+
+.thumbnail img{
+    width: 100%;
+}
+
+div.well:first-child{
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+input.login{
+width: 200px;
+}
+
+.deleteForm{
+    display: inline;
+}
