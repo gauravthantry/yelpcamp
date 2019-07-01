@@ -40,7 +40,7 @@ div.well:first-child{
 }
 
 textarea{
-    white-space: pre-wrap;
+    white-space: nowrap;
 }
 
 input.login{
