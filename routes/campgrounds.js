@@ -12,7 +12,7 @@ router.get("/", (req, res) => {
         if (err) {
             console.log(err);
         } else {
-            res.render("campground/index", { campgrounds: allCampgrounds });
+            res.render("campground/index", { campgrounds: allCampgrounds});
         }
     });
 });
@@ -24,6 +24,7 @@ router.get("/new", middleware.isLoggedIn, (req, res) => {
 
 //Creates the new campground
 router.post("/", middleware.isLoggedIn, (req, res) => {
+    
     const name = req.body.name,
         price = req.body.price,
         image = req.body.image,

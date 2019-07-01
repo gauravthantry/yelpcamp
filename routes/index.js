@@ -1,4 +1,3 @@
-//Krishna Leela Grand
 const express = require('express'),
       router = express.Router({mergeParam: true}),
       passport = require('passport'),
