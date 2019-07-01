@@ -17,7 +17,6 @@ const campgroundRoute = require('./routes/campgrounds'),
 app = express();
 
 const databaseurl = process.env.DATABASEURL || "mongodb://localhost/yelpcampV11";
-//mongoose.connect("mongodb://localhost/yelpcampV11", { useNewUrlParser: true });
 mongoose.connect(databaseurl, { useNewUrlParser: true });
 
 
