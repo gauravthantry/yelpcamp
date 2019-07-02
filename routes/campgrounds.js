@@ -71,6 +71,7 @@ router.get("/:id", (req, res) => {
             console.log(err);
         }
         else {
+            found.description = req.sanitize(found.description);
             res.render("campground/show", { campground: found });
         }
     });

@@ -1,4 +1,5 @@
 const passportLocalMangoose = require('passport-local-mongoose'),
+      expressSanitizer = require("express-sanitizer"),
       methodOverride = require('method-override'),
       LocalStrategy = require('passport-local'),
       bodyParser = require('body-parser'),
@@ -25,6 +26,7 @@ app.use(express.static('images'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use(methodOverride('_method'));
+app.use(expressSanitizer());
 app.set("view engine", "ejs");
 
 mongoose.set('useFindAndModify',false);
