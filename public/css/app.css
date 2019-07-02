@@ -51,6 +51,10 @@ width: 200px;
     display: inline;
 }
 
+.description{
+  white-space: pre-wrap;
+}
+
 /*Auto complete css */
 .autocomplete {
     position: absolute;
@@ -59,13 +63,13 @@ width: 200px;
   
   input {
     border: 1px solid transparent;
-    background-color: #f1f1f1;
+    /* background-color: #f1f1f1; */
     padding: 10px;
     font-size: 16px;
   }
   
   input[type=text] {
-    background-color: #f1f1f1;
+    /* background-color: #f1f1f1; */
     width: 100%;
   }
   

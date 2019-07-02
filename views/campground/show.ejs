@@ -20,7 +20,7 @@
         <div class="caption">
           <h4><a><%= campground.name %></a>
             <span class="pull-right">$ <%= campground.price %>/night</span></h4>
-          <p><%= campground.description %></p>
+          <p class="description"><%= campground.description %></p>
           <p><em>Submited by <%= user %></em></p>
           <% if(currentUser && campground.author.id.equals(currentUser._id)) {%>
               <a href="/campgrounds/<%= campground._id %>/edit" class="btn btn-xs btn-warning text-left">Edit</a>
