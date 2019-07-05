@@ -20,7 +20,7 @@ div.autocomplete{
     border: none;
     background: none;
 }
-#newCampForm{
+.campForm{
     width: 60%;
     margin: 0 auto;
 }
