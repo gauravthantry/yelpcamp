@@ -19,7 +19,6 @@ router.get("/", (req, res) => {
 
 //form for creating new campground
 router.get("/new", middleware.isLoggedIn, (req, res) => {
-    
     res.render("campground/new");
 });
 
