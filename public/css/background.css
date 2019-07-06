@@ -2,16 +2,6 @@ body{
     background: #000;
 }
 
-.frontIndex{
-    z-index: 1;
-    position: relative;
-}
-
-.login{
-    z-index: 1;
-    position: relative; 
-}
-
 #landing-header h1{
     color: #fff;
 }

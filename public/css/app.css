@@ -1,4 +1,3 @@
-
 .addHeader{
     text-align: center;
 }
@@ -6,6 +5,11 @@
 .formSpecs{
     width: 30%;
     margin:0 auto;
+}
+
+.frontIndex{
+  z-index: 1;
+  position: relative;
 }
 
 .autocomplete{
@@ -53,7 +57,7 @@ width: 200px;
 }
 
 .jumbotron,.well{
-  opacity: 0.8;
+  opacity: 0.9;
 }
 
 /*Auto complete css */
