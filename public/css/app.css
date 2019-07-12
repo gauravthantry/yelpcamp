@@ -89,11 +89,11 @@ width: 200px;
     width: 100%;
   }
   
-  input[type=submit] {
+  /* input[type=submit] {
     background-color: DodgerBlue;
     color: #fff;
     cursor: pointer;
-  }
+  } */
 
   #myInput{
       width: 100%;
