@@ -32,10 +32,17 @@ div.autocomplete{
 
 .thumbnail{
     padding: 0;
+    border: 0.3px solid #ddd;
+}
+
+.thumbnail:hover{
+  background-color: rgb(25, 96, 158);
 }
 
 .thumbnail img{
-    width: 100%;
+    width: 98%;
+    margin: auto;
+    margin-top: 0.15em;
 }
 
 div.well:first-child{
