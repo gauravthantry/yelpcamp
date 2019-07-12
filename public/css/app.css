@@ -30,19 +30,23 @@ div.autocomplete{
     margin: 0 auto;
 }
 
-.thumbnail{
+.image > .thumbnail{
     padding: 0;
     border: 0.3px solid #ddd;
 }
 
-.thumbnail:hover{
+.image> .thumbnail:hover{
   background-color: rgb(25, 96, 158);
 }
 
-.thumbnail img{
+.image> .thumbnail img{
     width: 98%;
     margin: auto;
     margin-top: 0.15em;
+}
+
+.showCamp > img{
+   width: 100%;
 }
 
 div.well:first-child{
