@@ -38,7 +38,7 @@
         <hr>
         <% campground.comments.forEach((comment)=>{ %>
         <% user = comment.author.username.substr(0,1).toUpperCase()+comment.author.username.substr(1,comment.author.username.length) %>
-        <p><strong><%= user %></strong><span class="pull-right">10 days ago</span></p>
+        <p><strong><%= user %></strong><span class="pull-right"><%= comment.time.toDateString() %></span></p>
         <p><%= comment.text %></p>
         <% if(currentUser && comment.author.id.equals(currentUser._id)) { %>
         <a href="/campgrounds/<%= campground._id %>/comment/<%= comment._id %>/edit" class="btn btn-xs btn-warning text-left">Edit</a>
