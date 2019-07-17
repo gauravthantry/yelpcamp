@@ -60,8 +60,8 @@ div.well:first-child{
   color: rgb(236, 240, 240);
 } 
 
-input.login{
-width: 200px;
+input.login, input.register{
+width: 100%;
 }
 
 .deleteForm{
