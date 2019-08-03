@@ -17,9 +17,12 @@
 
 .addHeader{
     text-align: center;
+    color: white;
 }
 
-
+textarea{
+  background-color: white;
+}
 
 
 .frontIndex{
