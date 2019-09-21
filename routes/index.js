@@ -95,10 +95,29 @@ router.get("/login", (req, res) => {
     }
 });
 
-router.post("/login", passport.authenticate("local", {
-    successRedirect: "/campgrounds",
-    failureRedirect: "/login"
-}), (req, res) => {
+router.post("/login", (req, res) => {
+    var username = req.body.username.toUpperCase();
+    console.log(username);
+    User.findOne({ username: username }, (err, user) => {
+        if (user === null) {
+            req.flash("error", "The provided username is incorrect. Please try again");
+            res.redirect("/login");
+        }
+        else if (user.isVerified) {
+            if (user.validPassword(user, req.body.password)) {
+                isLoggedIn = true;
+                currentUser = user;
+                res.render("home", { currentUser: currentUser });
+            }
+            else {
+                req.flash("error", "Incorrect password. Please try again");
+                res.redirect("/login");
+            }
+        } else if (!user.isVerified) {
+            req.flash("error", "Please confirm your email first by clicking on the activation link that was sent to you during registration");
+            res.redirect("/login");
+        }
+    });
 });
 
 router.get("/logout", (req, res) => {
