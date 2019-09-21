@@ -1,0 +1,14 @@
+<% include ./partials/header %>
+<div class="container register-form">
+    <div class="card">
+            <form action="/forgot" method="POST">
+                <div class="form-group">
+                    <label for="emailId">Registered Email ID:</label>
+                    <input type="text" class="form-control" name="email" placeholder="Registerd Email ID" >
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <span class="form-switch"><a href="/login"> Login</a> <span id="bar">|</span> <a href="/register">Not a member? Sign Up</a></span>
+            </form>  
+    </div>
+</div>
+<% include ./partials/footer %>
