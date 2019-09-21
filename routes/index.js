@@ -9,6 +9,20 @@ var randomstring = require('randomstring');
 var isLoggedIn = false,
     currentUser = null;
 
+/* -------------------------SMTP server details ------------------------------*/
+process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
+var transport = nodemailer.createTransport(smtpTransport({
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
+    auth: {
+        user: "gaurav.thantry@gmail.com",
+        pass: "#Mamatha09"
+    }
+}));
+var token, passwordResetToken, mailOptions, host, link;
+
+
   router.get("/", (req, res) => {
     res.render("landing");
 });
