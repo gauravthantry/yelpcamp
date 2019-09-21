@@ -44,7 +44,7 @@ middleWareObj.checkCommentOwnership = (req,res,next) =>{
     }
 }
 
-middleWareObj.isLoggedIn = (req,res,next) =>{
+    middleWareObj.isLoggedIn = (req,res,next) =>{
     //const errorMessage = "<div class=\"container\"><div class=\"alert alert-danger\" role=\"alert\">Please login first</div></div>"
     if (req.isAuthenticated()) {
         return next();
