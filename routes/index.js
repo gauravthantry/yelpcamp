@@ -73,8 +73,26 @@ router.post("/register", (req, res) => {
     });
 });
 
+/*---------------- change isVerified to true if the account is verified ------------------------- */
+router.get("/verify", (req, res) => {
+    User.findOne({ token: req.query.id }).exec((err, user) => {
+        if (err) {
+            return res.send(err);
+        }
+        user.isVerified = !user.isVerified;
+        user.save();
+        res.redirect("/login");
+    });
+});
+
 router.get("/login", (req, res) => {
-    res.render("login");
+    if (!isLoggedIn) {
+        res.render("login");
+    }
+    else {
+        req.flash("success", "You have already logged In");
+        res.redirect("/");
+    }
 });
 
 router.post("/login", passport.authenticate("local", {
