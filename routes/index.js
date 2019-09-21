@@ -1,6 +1,5 @@
 const express = require('express'),
     router = express.Router({ mergeParam: true }),
-    passport = require('passport'),
     User = require("../models/user"),
     nodemailer = require('nodemailer'),
     smtpTransport = require('nodemailer-smtp-transport'),
@@ -57,7 +56,7 @@ router.post("/register", (req, res) => {
             host = req.get('host');
             link = "http://" + host + "/verify?id=" + token;
             mailOptions = {
-                from: '"Vidya Speaks" <gaurav.thantry@gmail.com>',
+                from: '"Yelp camp" <gaurav.thantry@gmail.com>',
                 to: req.body.email,
                 subject: "Please confirm your email account",
                 html: "Hello " + req.body.username + "<br> Please on the following link link to verify your email account. <br> <a href=" + link + ">Click here to verify</a>"
@@ -120,19 +119,99 @@ router.post("/login", (req, res) => {
     });
 });
 
+/*------------------------------------Logout Route------------------------------------------- */
 router.get("/logout", (req, res) => {
-    //const successMessage = "<div class=\"container\"><div class=\"alert alert-success\" role=\"alert\"></div></div>";
-    req.logout();
-    req.flash("success", "You have successfully Logged Out");
+    isLoggedIn = false;
+    req.flash("success", "You have successfully logged out");
     res.redirect("/login");
 });
 
-function isLoggedIn(req, res, next) {
-    if (req.isAuthenticated()) {
-        return next();
+/*------------------------------------forgot password route---------------------------------- */
+router.get("/forgot", (req, res) => {
+    res.render("forgot");
+});
+
+router.post("/forgot", (req, res) => {
+    User.findOne({ email: req.body.email }).exec((err, user) => {
+        if (err) {
+            req.flash("error", err);
+        }
+        else {
+            token = randomstring.generate(30);
+            User.update({ email: req.body.email }, {
+                passwordResetToken: token
+            }, (err, affected, resp) => {
+                console.log();
+            });
+            host = req.get('host');
+            link = "http://" + host + "/reset?id=" + token;
+            mailOptions = {
+                from: '"Yelp Camp" <gaurav.thantry@gmail.com>',
+                to: req.body.email,
+                subject: "Password Reset",
+                html: "Hello " + user.username + "<br> Please click on the following link to reset the password for your account. <br> <a href=" + link + ">Click here to reset</a>"
+            }
+            transport.sendMail(mailOptions, (err, res) => {
+                if (err) {
+                    return console.log(err);
+                }
+            });
+            req.flash("success", "Please click on the reset link sent to your email account to reset the password");
+            res.redirect("/login");
+        }
+    });
+});
+
+/*-----------------------------------------Password reset route-----------------------------------------------*/
+router.get("/reset", (req, res) => {
+    passwordResetToken = req.query.id;
+    if (passwordResetToken) {
+        res.render("reset");
     }
-    req.flash("error", "You must be logged in to do that");
-    res.redirect("/login");
-}
+    else if (!isLoggedIn) {
+        req.flash("error", "You do not have the permission to access this page");
+        res.redirect("/login");
+    }
+    else if (isLoggedIn) {
+        req.flash("error", "You do not have the permission to access this page");
+        res.redirect("/");
+    }
+});
+
+router.post("/reset", (req, res) => {
+    User.findOne({ passwordResetToken: passwordResetToken }, (err, user) => {
+        if (err) {
+            req.flash("error", err);
+            res.redirect("/login");
+        }
+        else {
+            var hash = crypto.pbkdf2Sync(req.body.newpassword, user.saltValue, 1000, 64, `sha512`).toString(`hex`);
+            if (user.password !== hash && user.passwordOne !== hash && user.passwordTwo !== hash && user.passwordThree !== hash) {
+                if (user.passwordOne == null) {
+                    user.passwordOne = user.password;
+                }
+                else if (user.passwordTwo == null) {
+                    user.passwordTwo = user.passwordOne;
+                    user.passwordOne = user.password;
+                }
+                else if ((user.passwordThree == null) || !(user.passwordOne == null && user.passwordTwo == null && user.passwordThree == null)) {
+                    user.passwordThree = user.passwordTwo;
+                    user.passwordTwo = user.passwordOne;
+                    user.passwordOne = user.password;
+                }
+                user.password = hash;
+                user.save();
+                req.flash("success", "Password has been reset successfully. Please login again");
+                res.redirect("/login");
+            }
+            else if (user.password == hash || user.passwordOne == hash || user.passwordTwo == hash || user.passwordThree == hash) {
+                req.flash("error", "Please choose a password that is not the same as your previous 3 passwords");
+                res.redirect("/reset?id=" + passwordResetToken);
+            }
+
+        }
+    });
+});
+
 
 module.exports = router;
