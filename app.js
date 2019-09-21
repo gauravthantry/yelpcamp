@@ -1,12 +1,9 @@
-const passportLocalMangoose = require('passport-local-mongoose'),
-      expressSanitizer = require("express-sanitizer"),
+const expressSanitizer = require("express-sanitizer"),
       methodOverride = require('method-override'),
-      LocalStrategy = require('passport-local'),
       bodyParser = require('body-parser'),
       flash = require('connect-flash'),
       User = require('./models/user'),
       mongoose = require('mongoose'),
-      passport = require('passport'),
       express = require('express'),
       seedDB = require('./seeds');
       
@@ -39,9 +36,6 @@ app.use(require('express-session')({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
-passport.use(new LocalStrategy(User.authenticate()));
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
 
 app.use(function(req,res,next){
     res.locals.currentUser = req.user;
