@@ -101,4 +101,39 @@ function autocomplete(inp, arr) {
   });
 }
 
+function check_pass() {
+  setInterval(() => {
+      if (document.getElementById('password').value ==
+          document.getElementById('confirm_password').value) {
+          document.getElementById('message').style.color = 'green';
+          document.getElementById('message').innerHTML = 'matching';
+          document.getElementById('submit').disabled = false;
+          document.getElementById('message').style.display = 'block';
+      } else {
+          document.getElementById('message').style.color = 'red';
+          document.getElementById('message').innerHTML = 'not matching';
+          document.getElementById('submit').disabled = true;
+          document.getElementById('message').style.display = 'block';
+      }
+  },200);
+}
+
+function check_resetpass() {
+  setInterval(() => {
+      if (document.getElementById('newpassword').value ==
+          document.getElementById('confirmnewpassword').value) {
+          document.getElementById('message_reset').style.color = 'green';
+          document.getElementById('message_reset').innerHTML = 'matching';
+          document.getElementById('reset_submit').disabled = false;
+          document.getElementById('message_reset').style.display = 'block';
+      } else {
+          document.getElementById('message_reset').style.color = 'red';
+          document.getElementById('message_reset').innerHTML = 'not matching';
+          document.getElementById('reset_submit').disabled = true;
+          document.getElementById('message_reset').style.display = 'block';
+      }
+  },200);
+}
+
+
 autocomplete(document.getElementById("myInput"), searchList);
