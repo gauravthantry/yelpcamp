@@ -1,7 +1,13 @@
 const express = require('express'),
       router = express.Router({mergeParam: true}),
       passport = require('passport'),
-      User = require("../models/user");
+      User = require("../models/user"),
+      nodemailer = require('nodemailer'),
+      smtpTransport = require('nodemailer-smtp-transport'),
+      crypto = require('crypto');
+var randomstring = require('randomstring');
+var isLoggedIn = false,
+    currentUser = null;
 
   router.get("/", (req, res) => {
     res.render("landing");
