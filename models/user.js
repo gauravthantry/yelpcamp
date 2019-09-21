@@ -11,10 +11,6 @@ const userSchema = mongoose.Schema({
         unique: true, 
         required: true
     },
-    roles: {
-        type: 'String', 
-        default: 'user'
-    },
     isVerified: {
         type: Boolean, 
         default: false
