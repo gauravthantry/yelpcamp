@@ -3,8 +3,10 @@ const express = require('express'),
     Campground = require("../models/campground"),
     middleware = require("../middleware"),
     User = require("../models/user");
+var indexRoute = require("./index");
 
 //routing for campground
+
 
 //Displays all campgrounds
 router.get("/", (req, res) => {
@@ -12,14 +14,14 @@ router.get("/", (req, res) => {
         if (err) {
             console.log(err);
         } else {
-            res.render("campground/index", { campgrounds: allCampgrounds });
+            res.render("campground/index", { campgrounds: allCampgrounds,currentUser: indexRoute.currentUser });
         }
     });
 });
 
 //form for creating new campground
 router.get("/new", middleware.isLoggedIn, (req, res) => {
-    res.render("campground/new");
+    res.render("campground/new",{currentUser: indexRoute.currentUser});
 });
 
 //List campgrounds based on search
@@ -30,7 +32,7 @@ router.get("/search", (req, res) => {
             console.log(err);
         }
         else {
-            res.render("campground/index", { campgrounds: campgrounds });
+            res.render("campground/index", { campgrounds: campgrounds, currentUser: indexRoute.currentUser });
         }
     });
 });
@@ -43,8 +45,8 @@ router.post("/", middleware.isLoggedIn, (req, res) => {
         image = req.body.image,
         description = req.body.description;
     const author = {
-        id: req.user._id,
-        username: req.user.username
+        id: indexRoute.currentUser._id,
+        username: indexRoute.currentUser.username
     };
 
     const newCampground = {
@@ -61,7 +63,7 @@ router.post("/", middleware.isLoggedIn, (req, res) => {
             console.log(err);
         }
         else {
-            User.findById(req.user._id, (err, foundUser) => {
+            User.findById(indexRoute.currentUser._id, (err, foundUser) => {
                 if (err) {
                     console.log(err);
                 }
@@ -79,13 +81,14 @@ router.post("/", middleware.isLoggedIn, (req, res) => {
 
 //Displays information of a particular campground
 router.get("/:id", (req, res) => {
+    console.log(">>>>>>>>>>>>>>>>"+req.params+"<<<<<<<<<<<<<<<<<<<<<<");
     Campground.findById(req.params.id).populate("comments").exec((err, found) => {
         if (err) {
             console.log(err);
         }
         else {
             found.description = req.sanitize(found.description);
-            res.render("campground/show", { campground: found });
+            res.render("campground/show", { campground: found, currentUser: indexRoute.currentUser });
         }
     });
 });
@@ -97,7 +100,7 @@ router.get("/:id/edit", middleware.checkCampgroundOwnership, (req, res) => {
             console.log(err);
         }
         else {
-            res.render("campground/edit", { campground: foundCampground });
+            res.render("campground/edit", { campground: foundCampground, currentUser: indexRoute.currentUser });
         }
     });
 });

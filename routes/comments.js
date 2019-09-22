@@ -4,6 +4,7 @@ const express = require('express'),
       Comment = require("../models/comment"),
       middleware = require("../middleware");
 
+var indexRoute = require("./index");
 //New comment form route
 router.get("/new", middleware.isLoggedIn, (req, res) => {
     Campground.findById(req.params.id, (err, campground) => {
@@ -11,7 +12,7 @@ router.get("/new", middleware.isLoggedIn, (req, res) => {
             console.log(err);
         }
         else {
-            res.render("comment/new", { campground: campground });
+            res.render("comment/new", { campground: campground, currentUser: indexRoute.currentUser });
         }
     });
 });
@@ -57,7 +58,7 @@ router.get("/:comment_id/edit", middleware.checkCommentOwnership, (req, res) => 
                     res.redirect("back");
                 }
                 else {
-                    res.render("comment/edit", { campground: foundCampground, comment: foundComment });
+                    res.render("comment/edit", { campground: foundCampground, comment: foundComment, currentUser: indexRoute.currentUser });
                 }
             });
         }

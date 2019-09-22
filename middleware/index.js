@@ -2,14 +2,16 @@ const Campground = require("../models/campground"),
       Comment = require("../models/comment"),
       middleWareObj = {};
 
+var indexRoute = require("../routes/index");
+
 middleWareObj.checkCampgroundOwnership = (req,res,next)=>{
-    if(req.isAuthenticated()){
+    if( indexRoute.currentUser!=null){
         Campground.findById(req.params.id,(err,foundCampground)=>{
             if(err){
                 console.log(err);
             }
             else{
-                if(foundCampground.author.id.equals(req.user._id)){
+                if(foundCampground.author.id.equals(indexRoute.currentUser._id)){
                     next();
                 }
                 else{
@@ -24,13 +26,13 @@ middleWareObj.checkCampgroundOwnership = (req,res,next)=>{
 }
 
 middleWareObj.checkCommentOwnership = (req,res,next) =>{
-    if (req.isAuthenticated()) {
+    if (indexRoute.currentUser!=null) {
         Comment.findById(req.params.comment_id, (err, foundComment) => {
             if (err) {
                 console.log(err);
             }
             else {
-                if (foundComment.author.id.equals(req.user._id)) {
+                if (foundComment.author.id.equals(indexRoute.currentUser._id)) {
                     next();
                 }
                 else {
@@ -46,7 +48,7 @@ middleWareObj.checkCommentOwnership = (req,res,next) =>{
 
     middleWareObj.isLoggedIn = (req,res,next) =>{
     //const errorMessage = "<div class=\"container\"><div class=\"alert alert-danger\" role=\"alert\">Please login first</div></div>"
-    if (req.isAuthenticated()) {
+    if (indexRoute.currentUser!=null) {
         return next();
     }
     req.flash("error","Please login first");
