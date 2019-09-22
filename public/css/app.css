@@ -1,7 +1,7 @@
 @media screen and (min-width: 700px)
 {
   .formSpecs{
-    width: 30%;
+    width: 50%;
     margin:0 auto;
 }
 
@@ -24,6 +24,10 @@ textarea{
   background-color: white;
 }
 
+.switch-to-login{
+  margin-top: 5px;
+  float: right;
+}
 
 .frontIndex{
   z-index: 1;

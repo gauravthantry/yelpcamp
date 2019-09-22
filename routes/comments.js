@@ -30,8 +30,8 @@ router.post("/", middleware.isLoggedIn, (req, res) => {
                     res.redirect("campground/index");
                 }
                 else {
-                    comment.author.id = req.user._id;
-                    comment.author.username = req.user.username;
+                    comment.author.id = indexRoute.currentUser._id;
+                    comment.author.username = indexRoute.currentUser.username;
                     comment.save();
                     campground.comments.push(comment);
                     campground.save();
