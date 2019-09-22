@@ -102,7 +102,6 @@ router.post("/login", (req, res) => {
             res.redirect("/login");
         }
         else if (user.isVerified) {
-            console.log("verified user");
             if (user.validPassword(user, req.body.password)) {
                 isLoggedIn = true;
                 currentUser = user;

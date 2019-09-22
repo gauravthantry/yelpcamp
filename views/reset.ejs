@@ -1,6 +1,7 @@
 <% include ./partials/header %>
-<div class="container register-form">
-    <div class="card">
+<div class="container">
+    <div class="row">
+        <div class="well">
         <form action="/reset" method="POST">
             <div class="form-group">
                 <label for="newPassword">Password:</label>
@@ -16,5 +17,6 @@
             <span class="form-switch"><a href="/login"> Login</a> <span id="bar"></span></span>
         </form>
     </div>
+</div>
 </div>
 <% include ./partials/footer %>

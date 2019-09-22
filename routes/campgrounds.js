@@ -81,7 +81,6 @@ router.post("/", middleware.isLoggedIn, (req, res) => {
 
 //Displays information of a particular campground
 router.get("/:id", (req, res) => {
-    console.log(">>>>>>>>>>>>>>>>"+req.params+"<<<<<<<<<<<<<<<<<<<<<<");
     Campground.findById(req.params.id).populate("comments").exec((err, found) => {
         if (err) {
             console.log(err);
