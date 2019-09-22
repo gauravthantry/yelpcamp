@@ -44,7 +44,7 @@ app.use(function(req,res,next){
     next();
 });
 
-seedDB();  //Seeds the DB
+// seedDB();  //Seeds the DB
 app.use(indexRoute);
 app.use("/campgrounds",campgroundRoute);
 app.use("/campgrounds/:id/comment",commentRoute);
