@@ -41,7 +41,7 @@ router.post("/register", (req, res) => {
     var salt = crypto.randomBytes(16).toString('hex'),
         hash = crypto.pbkdf2Sync(req.body.password, salt, 1000, 64, `sha512`).toString(`hex`);
     let newUser = new User();
-    newUser.username = req.body.username,
+    newUser.username = req.body.username.toUpperCase(),
         newUser.email = req.body.email,
         newUser.token = token,
         newUser.saltValue = salt,
@@ -90,23 +90,24 @@ router.get("/login", (req, res) => {
     }
     else {
         req.flash("success", "You have already logged In");
-        res.redirect("/");
+        res.redirect("/campgrounds");
     }
 });
 
 router.post("/login", (req, res) => {
     var username = req.body.username.toUpperCase();
-    console.log(username);
     User.findOne({ username: username }, (err, user) => {
         if (user === null) {
             req.flash("error", "The provided username is incorrect. Please try again");
             res.redirect("/login");
         }
         else if (user.isVerified) {
+            console.log("verified user");
             if (user.validPassword(user, req.body.password)) {
                 isLoggedIn = true;
                 currentUser = user;
-                res.render("home", { currentUser: currentUser });
+                module.exports.currentUser = user;
+                res.redirect("/campgrounds");
             }
             else {
                 req.flash("error", "Incorrect password. Please try again");

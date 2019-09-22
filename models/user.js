@@ -1,5 +1,5 @@
-const passportLocalMongoose = require('passport-local-mongoose'),
-    mongoose = require('mongoose');
+const mongoose = require('mongoose'),
+    crypto = require('crypto');
 
 const userSchema = mongoose.Schema({
     username: {
@@ -7,14 +7,20 @@ const userSchema = mongoose.Schema({
         required: true
     },
     email: {
-        type: String, 
-        unique: true, 
+        type: String,
+        unique: true,
         required: true
     },
     isVerified: {
-        type: Boolean, 
+        type: Boolean,
         default: false
     },
+    campgrounds: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Campground"
+        }
+    ],
     password: {
         type: String,
         required: true
@@ -32,6 +38,16 @@ const userSchema = mongoose.Schema({
     passwordResetExpires: Date
 });
 
-userSchema.plugin(passportLocalMongoose);
+userSchema.methods.validPassword = function (user, password) {
+    var salt = user.saltValue;
+    var hash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
+    if (this.password === hash) {
+        console.log("validated");
+        return true;
+    }
+    console.log("Not validated");
+    return false;
+};
+
 
 module.exports = mongoose.model("User", userSchema);

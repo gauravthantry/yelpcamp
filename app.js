@@ -33,8 +33,7 @@ app.use(require('express-session')({
     resave: false,
     saveUninitialized: false
 }));
-app.use(passport.initialize());
-app.use(passport.session());
+
 app.use(flash());
 
 app.use(function(req,res,next){
@@ -46,9 +45,9 @@ app.use(function(req,res,next){
 });
 
 //seedDB();  //Seeds the DB
-
+app.use(indexRoute);
 app.use("/campgrounds",campgroundRoute);
 app.use("/campgrounds/:id/comment",commentRoute);
-app.use(indexRoute);
 
-app.listen(process.env.PORT, process.env.IP);
+
+app.listen(process.env.PORT || 3000);
