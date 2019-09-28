@@ -21,7 +21,6 @@ var transport = nodemailer.createTransport(smtpTransport({
 }));
 var token, passwordResetToken, mailOptions, host, link;
 
-
 router.get("/", (req, res) => {
     res.render("landing", { currentUser: currentUser });
 });
@@ -41,16 +40,17 @@ router.post("/register", (req, res) => {
     var salt = crypto.randomBytes(16).toString('hex'),
         hash = crypto.pbkdf2Sync(req.body.password, salt, 1000, 64, `sha512`).toString(`hex`);
     let newUser = new User();
-    newUser.username = req.body.username.toUpperCase(),
+    newUser.username = req.body.username,
         newUser.email = req.body.email,
         newUser.token = token,
         newUser.saltValue = salt,
         newUser.password = hash;
     newUser.save((err, user) => { //saves the user details
         if (err) {
-            return res.status(400).send({
-                message: "Failed to add user."
-            });
+            if(err.errmsg.includes("duplicate")){
+                req.flash("error", "A user with this username/email already exists.");
+                res.redirect("/register");
+            }
         }
         else {
             host = req.get('host');
@@ -89,14 +89,14 @@ router.get("/login", (req, res) => {
         res.render("login");
     }
     else {
-        req.flash("success", "You have already logged In");
+        req.flash("success", "You are already logged In");
         res.redirect("/campgrounds");
     }
 });
 
 router.post("/login", (req, res) => {
-    var username = req.body.username.toUpperCase();
-    User.findOne({ username: username }, (err, user) => {
+    var username = req.body.username;
+    User.findOne({ username: RegExp(username, "i") } , (err, user) => {
         if (user === null) {
             req.flash("error", "The provided username is incorrect. Please try again");
             res.redirect("/login");
