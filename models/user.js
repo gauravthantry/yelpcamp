@@ -42,10 +42,8 @@ userSchema.methods.validPassword = function (user, password) {
     var salt = user.saltValue;
     var hash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
     if (this.password === hash) {
-        console.log("validated");
         return true;
     }
-    console.log("Not validated");
     return false;
 };
 

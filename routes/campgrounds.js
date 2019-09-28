@@ -13,7 +13,7 @@ router.get("/", (req, res) => {
     Campground.find({}, (err, allCampgrounds) => {
         if (err) {
             console.log(err);
-        } else {
+        } else {      
             res.render("campground/index", { campgrounds: allCampgrounds,currentUser: indexRoute.currentUser });
         }
     });

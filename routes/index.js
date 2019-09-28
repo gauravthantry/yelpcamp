@@ -122,6 +122,8 @@ router.post("/login", (req, res) => {
 /*------------------------------------Logout Route------------------------------------------- */
 router.get("/logout", (req, res) => {
     isLoggedIn = false;
+    currentUser = null;
+    module.exports.currentUser = currentUser;
     req.flash("success", "You have successfully logged out");
     res.redirect("/login");
 });
