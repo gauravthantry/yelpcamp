@@ -135,5 +135,12 @@ function check_resetpass() {
   },200);
 }
 
+$(document).ready(function(){
+  $("#checkAvailability").click(function(){
+    var username = $('#username').val();
+    console.log(username+" <-- Searching for this ");
+  });
+});
+
 
 autocomplete(document.getElementById("myInput"), searchList);

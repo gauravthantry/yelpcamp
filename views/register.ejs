@@ -1,4 +1,5 @@
 <% include ./partials/header %>
+
 <div class="container">
     <div class="row">
         <div class="well">
@@ -7,6 +8,7 @@
                 <form action="/register" method="POST">
                     <div class="form-group">
                         <input type="text" class="form-control" id="username" name="username" placeholder="Enter User Name">
+                        <button type="button" class="btn btn-default" id="checkAvailability">Check Availability</button>
                     </div>
                     <div class="form-group">
                         <input type="email" class="form-control" id="emailAddress" name="email" placeholder="Enter Email Address">
@@ -26,4 +28,14 @@
 
     </div>
 </div>
+
+<script>
+        var ca = document.getElementById("checkAvailability");
+        if(ca){
+            ca.addEventListener("click",function(){
+      var username = document.getElementById('username').value;
+    
+        })
+    }
+</script>
 <%include ./partials/footer %>

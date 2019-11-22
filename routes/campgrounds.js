@@ -131,4 +131,6 @@ router.delete("/:id", middleware.checkCampgroundOwnership, (req, res) => {
     });
 });
 
+
+
 module.exports = router;

@@ -15,7 +15,7 @@ var transport = nodemailer.createTransport(smtpTransport({
     port: 465,
     secure: true,
     auth: {
-        user: "gaurav.thantry@gmail.com",
+        user: "yelpcampinggrounds@gmail.com",
         pass: "#Mamatha09"
     }
 }));
@@ -56,7 +56,7 @@ router.post("/register", (req, res) => {
             host = req.get('host');
             link = "http://" + host + "/verify?id=" + token;
             mailOptions = {
-                from: '"Yelp camp" <gaurav.thantry@gmail.com>',
+                from: '"Yelp camp" <yelpcampinggrounds@gmail.com>',
                 to: req.body.email,
                 subject: "Please confirm your email account",
                 html: "Hello " + req.body.username + "<br> Please on the following link link to verify your email account. <br> <a href=" + link + ">Click here to verify</a>"
