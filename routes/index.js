@@ -8,8 +8,26 @@ var randomstring = require('randomstring');
 var isLoggedIn = false,
     currentUser = null;
 
+
 /* -------------------------SMTP server details ------------------------------*/
 process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
+
+//------------ Under Construction method for authenticating using google API -------------------//
+// var transport = nodemailer.createTransport({
+//     host: 'smtp.gmail.com',
+//     port: 25,
+//     secure: true,
+//     auth: {
+//         type: 'OAuth2',
+//         user: "yelpcampinggrounds@gmail.com",
+//         clientId: '734610897335-uqpu8t3au1e231805ke9m6slk8p13dbv.apps.googleusercontent.com',
+//         clientSecret: 'hDfhT2u63NSvnHB7wUzdcbbP',
+//         refreshToken: '1//04NZTlxjmlkaECgYIARAAGAQSNwF-L9Iri0iqOP-k4y2o9bA-5GCKUuGkmMbgGcc0Wsa-tKJA1DYGtabb-6kGDb7UqYnsf_CMI24'
+//     }
+
+// });
+//----------------------------------------------------------------------------------------------//
+
 var transport = nodemailer.createTransport(smtpTransport({
     host: 'smtp.gmail.com',
     port: 465,
@@ -19,6 +37,7 @@ var transport = nodemailer.createTransport(smtpTransport({
         pass: "#Mamatha09"
     }
 }));
+
 var token, passwordResetToken, mailOptions, host, link;
 
 router.get("/", (req, res) => {
@@ -52,11 +71,35 @@ router.post("/register", (req, res) => {
                 res.redirect("/register");
             }
         }
+        //---------------------- Under construction loop for authentication using Google API -------------------------//
+        // else {
+        //     host = req.get('host');
+        //     link = "http://" + host + "/verify?id=" + token;
+        //     mailOptions = {
+        //         from: '"Yelp camp" <yelpcampinggrounds@gmail.com>',
+        //         to: req.body.email,
+        //         subject: "Please confirm your email account",
+        //         html: "Hello " + req.body.username + "<br> Please on the following link link to verify your email account. <br> <a href=" + link + ">Click here to verify</a>",
+        //         auth: {
+        //             user: "yelpcampinggrounds@gmail.com",
+        //             refreshToken: '1//04NZTlxjmlkaECgYIARAAGAQSNwF-L9Iri0iqOP-k4y2o9bA-5GCKUuGkmMbgGcc0Wsa-tKJA1DYGtabb-6kGDb7UqYnsf_CMI24',
+        //             accessToken: 'ya29.Il-4B39HWX6J190zO67kbDo9xWvzWmyuppl771fqePRkTssEK2fe-6k1DrqLT99DV3wLC83q1lKTNz-IbdOo23MmWKhv7dAkSu2CAR04PcjR5woZHeRITSHWINNUjRu0QQ',
+        //         }
+        //     }
+        //     transport.sendMail(mailOptions, (err, res) => {
+        //         if (err) {
+        //             return console.log(err);
+        //         }
+        //     })
+        //     req.flash("success", "A verification link has been sent to your email. Please click on it to confirm your account");
+        //     res.redirect("/login");
+        // }
+        //--------------------------------------------------------------------------------------------------------------//
         else {
             host = req.get('host');
             link = "http://" + host + "/verify?id=" + token;
             mailOptions = {
-                from: '"Yelp camp" <yelpcampinggrounds@gmail.com>',
+                from: '"Yelp camp" <gaurav.thantry@gmail.com>',
                 to: req.body.email,
                 subject: "Please confirm your email account",
                 html: "Hello " + req.body.username + "<br> Please on the following link link to verify your email account. <br> <a href=" + link + ">Click here to verify</a>"
