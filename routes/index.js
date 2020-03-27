@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express'),
     router = express.Router({ mergeParam: true }),
     User = require("../models/user"),
@@ -33,8 +34,8 @@ var transport = nodemailer.createTransport(smtpTransport({
     port: 465,
     secure: true,
     auth: {
-        user: "yelpcampinggrounds@gmail.com",
-        pass: "#Mamatha09"
+        user: process.env.EMAIL,
+        pass: process.env.PASSWORD
     }
 }));
 
