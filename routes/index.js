@@ -3,41 +3,42 @@ const express = require('express'),
     router = express.Router({ mergeParam: true }),
     User = require("../models/user"),
     nodemailer = require('nodemailer'),
-    smtpTransport = require('nodemailer-smtp-transport'),
-    crypto = require('crypto');
+    crypto = require('crypto'),
+    fs = require('fs'),
+    path = require('path'),
+    readline = require('readline'),
+    { google } = require('googleapis')
+    OAuth2 = google.auth.OAuth2;
 var randomstring = require('randomstring');
 var isLoggedIn = false,
     currentUser = null;
 
-
-/* -------------------------SMTP server details ------------------------------*/
 process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
 
-//------------ Under Construction method for authenticating using google API -------------------//
-// var transport = nodemailer.createTransport({
-//     host: 'smtp.gmail.com',
-//     port: 25,
-//     secure: true,
-//     auth: {
-//         type: 'OAuth2',
-//         user: "yelpcampinggrounds@gmail.com",
-//         clientId: '734610897335-uqpu8t3au1e231805ke9m6slk8p13dbv.apps.googleusercontent.com',
-//         clientSecret: 'hDfhT2u63NSvnHB7wUzdcbbP',
-//         refreshToken: '1//04NZTlxjmlkaECgYIARAAGAQSNwF-L9Iri0iqOP-k4y2o9bA-5GCKUuGkmMbgGcc0Wsa-tKJA1DYGtabb-6kGDb7UqYnsf_CMI24'
-//     }
+let smtpTransport = require('nodemailer-smtp-transport');
 
-// });
-//----------------------------------------------------------------------------------------------//
+const oauth2Client = new OAuth2(
+    "212357655321-8n6v5tnuc3qk22bcrdqan6jq8qk7trqm.apps.googleusercontent.com",
+    "z3GCLFd25K3bktIqtgdUGfgT", // Client Secret
+    "https://developers.google.com/oauthplayground" // Redirect URL
+);
 
-var transport = nodemailer.createTransport(smtpTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
+oauth2Client.setCredentials({
+    refresh_token: "1//04tCmVwzR8h1UCgYIARAAGAQSNwF-L9IrfbBlV-YJzY4YE2LhXWZRq8W7Is3LYhoPTPpKFXvLONr1Z2H-3E-z4g2-PNnjoLc6QKo"
+});
+const accessToken = oauth2Client.getAccessToken();
+
+smtpTransport = nodemailer.createTransport({
+    service: "gmail",
     auth: {
+        type: "OAuth2",
         user: "yelpcampinggrounds@gmail.com",
-        pass: "#Mamatha09"
+        clientId: "212357655321-8n6v5tnuc3qk22bcrdqan6jq8qk7trqm.apps.googleusercontent.com",
+        clientSecret: "z3GCLFd25K3bktIqtgdUGfgT",
+        refreshToken: "1//04tCmVwzR8h1UCgYIARAAGAQSNwF-L9IrfbBlV-YJzY4YE2LhXWZRq8W7Is3LYhoPTPpKFXvLONr1Z2H-3E-z4g2-PNnjoLc6QKo",
+        accessToken: accessToken
     }
-}));
+});
 
 var token, passwordResetToken, mailOptions, host, link;
 
@@ -67,49 +68,24 @@ router.post("/register", (req, res) => {
         newUser.password = hash;
     newUser.save((err, user) => { //saves the user details
         if (err) {
-            if(err.errmsg.includes("duplicate")){
+            if (err.errmsg.includes("duplicate")) {
                 req.flash("error", "A user with this username/email already exists.");
                 res.redirect("/register");
             }
         }
-        //---------------------- Under construction loop for authentication using Google API -------------------------//
-        // else {
-        //     host = req.get('host');
-        //     link = "http://" + host + "/verify?id=" + token;
-        //     mailOptions = {
-        //         from: '"Yelp camp" <yelpcampinggrounds@gmail.com>',
-        //         to: req.body.email,
-        //         subject: "Please confirm your email account",
-        //         html: "Hello " + req.body.username + "<br> Please on the following link link to verify your email account. <br> <a href=" + link + ">Click here to verify</a>",
-        //         auth: {
-        //             user: "yelpcampinggrounds@gmail.com",
-        //             refreshToken: '1//04NZTlxjmlkaECgYIARAAGAQSNwF-L9Iri0iqOP-k4y2o9bA-5GCKUuGkmMbgGcc0Wsa-tKJA1DYGtabb-6kGDb7UqYnsf_CMI24',
-        //             accessToken: 'ya29.Il-4B39HWX6J190zO67kbDo9xWvzWmyuppl771fqePRkTssEK2fe-6k1DrqLT99DV3wLC83q1lKTNz-IbdOo23MmWKhv7dAkSu2CAR04PcjR5woZHeRITSHWINNUjRu0QQ',
-        //         }
-        //     }
-        //     transport.sendMail(mailOptions, (err, res) => {
-        //         if (err) {
-        //             return console.log(err);
-        //         }
-        //     })
-        //     req.flash("success", "A verification link has been sent to your email. Please click on it to confirm your account");
-        //     res.redirect("/login");
-        // }
-        //--------------------------------------------------------------------------------------------------------------//
         else {
             host = req.get('host');
             link = "http://" + host + "/verify?id=" + token;
             mailOptions = {
-                from: '"Yelp camp" <gaurav.thantry@gmail.com>',
+                from: '"Yelp camp" <yelpcampinggrounds@gmail.com>',
                 to: req.body.email,
                 subject: "Please confirm your email account",
                 html: "Hello " + req.body.username + "<br> Please on the following link link to verify your email account. <br> <a href=" + link + ">Click here to verify</a>"
             }
-            transport.sendMail(mailOptions, (err, res) => {
-                if (err) {
-                    return console.log(err);
-                }
-            })
+            smtpTransport.sendMail(mailOptions, (error, response) => {
+                error ? console.log(error) : console.log(response);
+                smtpTransport.close();
+            });
             req.flash("success", "A verification link has been sent to your email. Please click on it to confirm your account");
             res.redirect("/login");
         }
@@ -140,7 +116,7 @@ router.get("/login", (req, res) => {
 
 router.post("/login", (req, res) => {
     var username = req.body.username;
-    User.findOne({ username: RegExp(username, "i") } , (err, user) => {
+    User.findOne({ username: RegExp(username, "i") }, (err, user) => {
         if (user === null) {
             req.flash("error", "The provided username is incorrect. Please try again");
             res.redirect("/login");
@@ -192,15 +168,14 @@ router.post("/forgot", (req, res) => {
             host = req.get('host');
             link = "http://" + host + "/reset?id=" + token;
             mailOptions = {
-                from: '"Yelp Camp" <gaurav.thantry@gmail.com>',
+                from: '"Yelp Camp" <yelpcampinggrounds@gmail.com>',
                 to: req.body.email,
                 subject: "Password Reset",
                 html: "Hello " + user.username + "<br> Please click on the following link to reset the password for your account. <br> <a href=" + link + ">Click here to reset</a>"
             }
-            transport.sendMail(mailOptions, (err, res) => {
-                if (err) {
-                    return console.log(err);
-                }
+            smtpTransport.sendMail(mailOptions, (error, response) => {
+                error ? console.log(error) : console.log(response);
+                smtpTransport.close();
             });
             req.flash("success", "Please click on the reset link sent to your email account to reset the password");
             res.redirect("/login");

@@ -142,5 +142,11 @@ $(document).ready(function(){
   });
 });
 
+function get(){
+  $.ajax({
+    
+  })
+}
+
 
 autocomplete(document.getElementById("myInput"), searchList);
