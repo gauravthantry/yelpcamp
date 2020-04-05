@@ -8,37 +8,57 @@ const express = require('express'),
     path = require('path'),
     readline = require('readline'),
     { google } = require('googleapis')
-    OAuth2 = google.auth.OAuth2;
+    const OAuth2 = google.auth.OAuth2;
 var randomstring = require('randomstring');
 var isLoggedIn = false,
     currentUser = null;
+let client_id, client_secret, redirect_uri, refresh_token;
+
+
+fs.readFile('credentials.json',(err,content)=>{
+    if(err){
+        return console.log("Error reading from credentials file: "+err);
+    }
+    let credentials = JSON.parse(content);
+    client_id = credentials.client_id;
+    client_secret = credentials.client_secret;
+    refresh_token = credentials.refresh_token;
+    redirect_uri = credentials.redirect_uris[0];
+    oauthEmailSetup(client_id, client_secret, refresh_token, redirect_uri);
+});
+
 
 process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
 
 let smtpTransport = require('nodemailer-smtp-transport');
 
-const oauth2Client = new OAuth2(
-    "212357655321-8n6v5tnuc3qk22bcrdqan6jq8qk7trqm.apps.googleusercontent.com",
-    "z3GCLFd25K3bktIqtgdUGfgT", // Client Secret
-    "https://developers.google.com/oauthplayground" // Redirect URL
-);
+function oauthEmailSetup(client_id, client_secret,refresh_token,redirect_uri)
+{
+    const oauth2Client = new OAuth2(
+        client_id,
+        client_secret, // Client Secret
+        redirect_uri// Redirect URL
+    );
 
-oauth2Client.setCredentials({
-    refresh_token: "1//04tCmVwzR8h1UCgYIARAAGAQSNwF-L9IrfbBlV-YJzY4YE2LhXWZRq8W7Is3LYhoPTPpKFXvLONr1Z2H-3E-z4g2-PNnjoLc6QKo"
-});
-const accessToken = oauth2Client.getAccessToken();
+    oauth2Client.setCredentials({
+        refresh_token: "1//04tCmVwzR8h1UCgYIARAAGAQSNwF-L9IrfbBlV-YJzY4YE2LhXWZRq8W7Is3LYhoPTPpKFXvLONr1Z2H-3E-z4g2-PNnjoLc6QKo"
+    });
+    const accessToken = oauth2Client.getAccessToken();
 
-smtpTransport = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-        type: "OAuth2",
-        user: "yelpcampinggrounds@gmail.com",
-        clientId: "212357655321-8n6v5tnuc3qk22bcrdqan6jq8qk7trqm.apps.googleusercontent.com",
-        clientSecret: "z3GCLFd25K3bktIqtgdUGfgT",
-        refreshToken: "1//04tCmVwzR8h1UCgYIARAAGAQSNwF-L9IrfbBlV-YJzY4YE2LhXWZRq8W7Is3LYhoPTPpKFXvLONr1Z2H-3E-z4g2-PNnjoLc6QKo",
-        accessToken: accessToken
-    }
-});
+    smtpTransport = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+            type: "OAuth2",
+            user: "yelpcampinggrounds@gmail.com",
+            clientId: client_id,
+            clientSecret: client_secret,
+            refreshToken: "1//04tCmVwzR8h1UCgYIARAAGAQSNwF-L9IrfbBlV-YJzY4YE2LhXWZRq8W7Is3LYhoPTPpKFXvLONr1Z2H-3E-z4g2-PNnjoLc6QKo",
+            accessToken: accessToken
+        }
+    });
+}
+
+
 
 var token, passwordResetToken, mailOptions, host, link;
 
